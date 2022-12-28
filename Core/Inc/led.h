@@ -10,11 +10,18 @@ private:
     uint16_t GPIO_Pin;
 
 public:
-    Button(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) : GPIOx(GPIOx), GPIO_Pin(GPIO_Pin){};
-    ~Button();
-    void Toggle();
-    void PullUp();
-    void PullDown();
+    LED(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) : GPIOx(GPIOx), GPIO_Pin(GPIO_Pin)
+    {
+        off();
+    };
+    ~LED()
+    {
+        off();
+    };
+    void toggle();
+    void on();
+    void off();
+    bool get_current_status();
 };
 
 #endif

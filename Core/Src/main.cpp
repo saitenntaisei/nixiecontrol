@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "led.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -89,14 +89,13 @@ int main(void)
   HAL_GPIO_WritePin(B_GPIO_Port, B_Pin, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(C_GPIO_Port, C_Pin, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(D_GPIO_Port, D_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(LED_1_GPIO_Port, LED_1_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_2_GPIO_Port, LED_2_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(LED_3_GPIO_Port, LED_3_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_SET);
   HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_SET);
-
+  LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
+  LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
+  LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
   /* USER CODE END 2 */
 
   /* Infinite loop */
