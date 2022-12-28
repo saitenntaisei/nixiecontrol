@@ -2,3 +2,5 @@ build/
 build/*
 build/
 Drivers/
+.cortex-debug.registers.state.json
+
