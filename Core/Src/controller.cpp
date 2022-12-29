@@ -90,6 +90,8 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
         {
             pos++;
             pos %= 4;
+            if (pos == 0)
+                pos = 4;
         }
         auto current_time = gmtime(&ltime);
         switch (content)
