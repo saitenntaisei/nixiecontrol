@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "led.h"
+#include "tube.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -85,14 +86,8 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  HAL_GPIO_WritePin(A_GPIO_Port, A_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(B_GPIO_Port, B_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(C_GPIO_Port, C_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(D_GPIO_Port, D_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_SET);
-  HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_SET);
+  nixie::TUBES nixie_tubes;
+
   LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
   LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
   LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
@@ -103,19 +98,12 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-    HAL_GPIO_TogglePin(A_GPIO_Port, A_Pin);
-    HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
-    HAL_GPIO_TogglePin(Tube_1_GPIO_Port, Tube_1_Pin);
-    HAL_Delay(1);
-    HAL_GPIO_TogglePin(Tube_2_GPIO_Port, Tube_2_Pin);
-    // HAL_GPIO_TogglePin(A_GPIO_Port, A_Pin);
-    HAL_Delay(1);
-    HAL_GPIO_TogglePin(Tube_2_GPIO_Port, Tube_2_Pin);
-    HAL_GPIO_TogglePin(A_GPIO_Port, A_Pin);
-    HAL_Delay(1);
-    // HAL_GPIO_TogglePin(A_GPIO_Port, A_Pin);
-    HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
-    HAL_GPIO_TogglePin(Tube_1_GPIO_Port, Tube_1_Pin);
+    for (int i = 0; i < 10; ++i)
+    {
+      nixie_tubes.disp(i);
+      HAL_Delay(1000);
+    }
+
     HAL_Delay(1);
     /* USER CODE BEGIN 3 */
   }
