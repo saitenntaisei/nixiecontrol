@@ -60,6 +60,12 @@ void Error_Handler(void);
 #define SW_1_Pin GPIO_PIN_13
 #define SW_1_GPIO_Port GPIOC
 #define SW_1_EXTI_IRQn EXTI15_10_IRQn
+#define SW_2_Pin GPIO_PIN_14
+#define SW_2_GPIO_Port GPIOC
+#define SW_2_EXTI_IRQn EXTI15_10_IRQn
+#define SW_3_Pin GPIO_PIN_15
+#define SW_3_GPIO_Port GPIOC
+#define SW_3_EXTI_IRQn EXTI15_10_IRQn
 #define LED_1_Pin GPIO_PIN_0
 #define LED_1_GPIO_Port GPIOB
 #define LED_2_Pin GPIO_PIN_1
