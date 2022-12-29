@@ -18,7 +18,7 @@ namespace nixie
     class TUBES : public TUBE
     {
     private:
-        uint8_t current_lightning_tube;
+        uint8_t current_lightning_tube = 0;
         GPIO_TypeDef *Tube_GPIO_Port[4] = {Tube_1_GPIO_Port, Tube_2_GPIO_Port, Tube_3_GPIO_Port, Tube_4_GPIO_Port};
         const uint16_t Tube_Pin[4] = {Tube_1_Pin, Tube_2_Pin, Tube_3_Pin, Tube_4_Pin};
 

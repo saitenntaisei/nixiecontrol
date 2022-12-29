@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "rtc.h"
 #include "gpio.h"
 #include "led.h"
 #include "tube.h"
@@ -54,6 +55,30 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+nixie::TUBES nixie_tubes;
+
+LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
+LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
+LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  if (GPIO_Pin == SW_3_Pin)
+  {
+    LED_3.toggle();
+    return;
+  }
+  if (GPIO_Pin == SW_2_Pin)
+  {
+    LED_2.toggle();
+    return;
+  }
+  if (GPIO_Pin == SW_1_Pin)
+  {
+
+    LED_1.toggle();
+    return;
+  }
+}
 
 /* USER CODE END 0 */
 
@@ -86,11 +111,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  nixie::TUBES nixie_tubes;
 
-  LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
-  LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
-  LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,13 +139,15 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Initializes the RCC Oscillators according to the specified parameters
    * in the RCC_OscInitTypeDef structure.
    */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -140,6 +163,12 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
