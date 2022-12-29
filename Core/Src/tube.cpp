@@ -60,4 +60,12 @@ namespace nixie
         HAL_Delay(1);
         HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_SET);
     }
+
+    void TUBES::disp(uint16_t num)
+    {
+        uint8_t upper = num / 100;
+        uint8_t lower = num % 100;
+        disp(upper, lower);
+    }
+
 }

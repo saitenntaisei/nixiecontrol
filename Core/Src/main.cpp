@@ -24,6 +24,7 @@
 #include "tube.h"
 #include "string.h"
 #include "time.h"
+#include "controller.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -61,23 +62,25 @@ void SystemClock_Config(void);
 LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
 LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
 LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
+CONTROLLER controller;
 uint8_t cnt = 0;
-time_t ltime;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == SW_3_Pin)
   {
+    controller.handler(false, false, true);
     LED_3.toggle();
     return;
   }
   if (GPIO_Pin == SW_2_Pin)
   {
+    controller.handler(false, true, false);
     LED_2.toggle();
     return;
   }
   if (GPIO_Pin == SW_1_Pin)
   {
-
+    controller.handler(true, false, false);
     LED_1.toggle();
     return;
   }
@@ -87,7 +90,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim == &htim2)
   {
-    ltime++;
+
+    controller.adder();
     // LED_2.toggle();
   }
 }
@@ -124,34 +128,28 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  // RTC_TimeTypeDef sTime;
-  // RTC_DateTypeDef sDate;
-  // HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-  // HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
-  // pre = sTime;
-  /* USER CODE END 2 */
-  nixie::TUBES nixie_tubes;
   HAL_TIM_Base_Start_IT(&htim2);
+  /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  nixie::TUBES nixie_tubes;
+
   while (1)
   {
-    auto current_time = gmtime(&ltime);
-    uint8_t sec = current_time->tm_sec;
-    uint8_t minute = current_time->tm_min;
-    uint8_t hour = current_time->tm_hour;
-    uint8_t day = current_time->tm_mday;
-    uint8_t month = current_time->tm_mon;
-    uint8_t year = current_time->tm_year;
+    // auto current_time = gmtime(&ltime);
+    // uint8_t sec = current_time->tm_sec;
+    // uint8_t minute = current_time->tm_min;
+    // uint8_t hour = current_time->tm_hour;
+    // uint8_t day = current_time->tm_mday;
+    // uint8_t month = current_time->tm_mon;
+    // uint8_t year = current_time->tm_year;
 
-    nixie_tubes.disp(minute, sec);
+    // nixie_tubes.disp(minute, sec);
+    controller.disp();
 
-    // nixie_tubes.next_tube();
-    // nixie_tubes.next_tube();
-    // nixie_tubes.disp(hour % 10);
-    // nixie_tubes.next_tube();
-    // nixie_tubes.disp(hour / 10);
     HAL_Delay(1);
+    /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
