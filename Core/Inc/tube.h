@@ -12,7 +12,7 @@ namespace nixie
     public:
         TUBE();
         ~TUBE();
-        void disp(int num);
+        void disp(uint8_t num);
     };
 
     class TUBES : public TUBE
@@ -23,8 +23,9 @@ namespace nixie
         const uint16_t Tube_Pin[4] = {Tube_1_Pin, Tube_2_Pin, Tube_3_Pin, Tube_4_Pin};
 
     public:
+        using TUBE::disp;
         TUBES();
-        void next_tube();
+        void disp(uint8_t upper, uint8_t lower);
     };
 }
 #endif

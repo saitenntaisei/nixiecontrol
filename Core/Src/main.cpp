@@ -19,9 +19,12 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "rtc.h"
+#include "tim.h"
 #include "gpio.h"
 #include "led.h"
 #include "tube.h"
+#include "string.h"
+#include "time.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -55,28 +58,29 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-nixie::TUBES nixie_tubes;
 
 LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
 LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
 LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
+uint8_t cnt = 0;
+time_t ltime;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if (GPIO_Pin == SW_3_Pin)
-  {
-    LED_3.toggle();
-    return;
-  }
-  if (GPIO_Pin == SW_2_Pin)
-  {
-    LED_2.toggle();
-    return;
-  }
   if (GPIO_Pin == SW_1_Pin)
   {
+    cnt++;
 
     LED_1.toggle();
     return;
+  }
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim == &htim2)
+  {
+    ltime++;
+    LED_2.toggle();
   }
 }
 
@@ -110,21 +114,35 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
+  // RTC_TimeTypeDef sTime;
+  // RTC_DateTypeDef sDate;
+  // HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+  // HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+  // pre = sTime;
   /* USER CODE END 2 */
-
+  nixie::TUBES nixie_tubes;
+  HAL_TIM_Base_Start_IT(&htim2);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
-    for (int i = 0; i < 10; ++i)
-    {
-      nixie_tubes.disp(i);
-      HAL_Delay(1000);
-    }
+    auto current_time = gmtime(&ltime);
+    uint8_t sec = current_time->tm_sec;
+    uint8_t minute = current_time->tm_min;
+    uint8_t hour = current_time->tm_hour;
+    uint8_t day = current_time->tm_mday;
+    uint8_t month = current_time->tm_mon;
+    uint8_t year = current_time->tm_year;
 
+    nixie_tubes.disp(minute, sec);
+
+    // nixie_tubes.next_tube();
+    // nixie_tubes.next_tube();
+    // nixie_tubes.disp(hour % 10);
+    // nixie_tubes.next_tube();
+    // nixie_tubes.disp(hour / 10);
     HAL_Delay(1);
     /* USER CODE BEGIN 3 */
   }
@@ -147,7 +165,6 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {

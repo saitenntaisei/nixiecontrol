@@ -15,7 +15,7 @@ namespace nixie
         HAL_GPIO_WritePin(C_GPIO_Port, C_Pin, GPIO_PIN_RESET);
         HAL_GPIO_WritePin(D_GPIO_Port, D_Pin, GPIO_PIN_RESET);
     }
-    void TUBE::disp(int num)
+    void TUBE::disp(uint8_t num)
     {
         if (num > 9 || num < 0)
             return;
@@ -31,16 +31,33 @@ namespace nixie
     }
     TUBES::TUBES()
     {
-        HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_SET);
         HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_SET);
+        current_lightning_tube = 0;
     }
 
-    void TUBES::next_tube()
+    void TUBES::disp(uint8_t upper, uint8_t lower)
     {
-        HAL_GPIO_WritePin(Tube_GPIO_Port[current_lightning_tube], Tube_Pin[current_lightning_tube], GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_RESET);
+        TUBE::disp(lower % 10);
         HAL_Delay(1);
-        HAL_GPIO_WritePin(Tube_GPIO_Port[++current_lightning_tube], Tube_Pin[++current_lightning_tube], GPIO_PIN_SET);
+        HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_SET);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_RESET);
+        TUBE::disp(lower / 10);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_SET);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_RESET);
+        TUBE::disp(upper % 10);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_SET);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_RESET);
+        TUBE::disp(upper / 10);
+        HAL_Delay(1);
+        HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_SET);
     }
 }
