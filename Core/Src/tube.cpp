@@ -38,34 +38,57 @@ namespace nixie
         current_lightning_tube = 0;
     }
 
-    void TUBES::disp(uint8_t upper, uint8_t lower)
+    void TUBES::disp(uint8_t upper, uint8_t lower, uint16_t blink)
     {
-        HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_RESET);
+        if (cnt[0] < blink_period || !(blink & 1))
+        {
+            HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_RESET);
+        }
+        cnt[0]++;
+        cnt[0] %= (blink_period * 2);
         TUBE::disp(lower % 10);
         HAL_Delay(1);
         HAL_GPIO_WritePin(Tube_1_GPIO_Port, Tube_1_Pin, GPIO_PIN_SET);
         HAL_Delay(1);
-        HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_RESET);
+        if (cnt[1] < blink_period || !((blink >> 1) & 1))
+        {
+
+            HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_RESET);
+        }
+        cnt[1]++;
+        cnt[1] %= blink_period * 2;
         TUBE::disp(lower / 10);
         HAL_Delay(1);
         HAL_GPIO_WritePin(Tube_2_GPIO_Port, Tube_2_Pin, GPIO_PIN_SET);
         HAL_Delay(1);
-        HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_RESET);
+        if (cnt[2] < blink_period || !((blink >> 2) & 1))
+        {
+
+            HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_RESET);
+        }
+        cnt[2]++;
+        cnt[2] %= blink_period * 2;
         TUBE::disp(upper % 10);
         HAL_Delay(1);
         HAL_GPIO_WritePin(Tube_3_GPIO_Port, Tube_3_Pin, GPIO_PIN_SET);
         HAL_Delay(1);
-        HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_RESET);
+        if (cnt[3] < blink_period || !((blink >> 3) & 1))
+        {
+
+            HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_RESET);
+        }
+        cnt[3]++;
+        cnt[3] %= blink_period * 2;
         TUBE::disp(upper / 10);
         HAL_Delay(1);
         HAL_GPIO_WritePin(Tube_4_GPIO_Port, Tube_4_Pin, GPIO_PIN_SET);
     }
 
-    void TUBES::disp(uint16_t num)
+    void TUBES::disp(uint16_t num, uint16_t blink)
     {
         uint8_t upper = num / 100;
         uint8_t lower = num % 100;
-        disp(upper, lower);
+        disp(upper, lower, blink);
     }
 
 }

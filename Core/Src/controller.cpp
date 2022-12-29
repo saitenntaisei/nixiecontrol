@@ -7,6 +7,7 @@ CONTROLLER::CONTROLLER()
     content = Sec;
     ltime = 0;
     tubes = std::make_shared<nixie::TUBES>();
+    pos = 0;
 }
 
 void CONTROLLER::changeDisp(Content currentContent)
@@ -30,20 +31,24 @@ void CONTROLLER::disp()
     uint8_t day = current_time->tm_mday;
     uint8_t month = current_time->tm_mon + 1;     // month is 0-indexed so need to add 1
     uint16_t year = current_time->tm_year + 1900; // need to add 1900
-
+    uint16_t blink_pos = 0;
+    if (pos != 0)
+    {
+        blink_pos = (1 << (pos - 1));
+    }
     switch (content)
     {
     case Year:
-        tubes->disp(year);
+        tubes->disp(year, blink_pos);
         break;
     case Day:
-        tubes->disp(month, day);
+        tubes->disp(month, day, blink_pos);
         break;
     case Hour:
-        tubes->disp(hour, minute);
+        tubes->disp(hour, minute, blink_pos);
         break;
     case Sec:
-        tubes->disp(minute, sec);
+        tubes->disp(minute, sec, blink_pos);
         break;
     default:
         break;
@@ -54,11 +59,13 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
 {
     if (status == normal)
     {
+        pos = 0;
         if (button1)
         {
             if (content == Sec)
                 return;
             button1 = false;
+            pos = 1;
             changeStatus();
         }
         else if (button2)
@@ -75,6 +82,7 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
     {
         if (button1)
         {
+            pos = 0;
             status = normal;
             return;
         }
@@ -90,25 +98,25 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             current_time->tm_sec = 0;
             switch (pos)
             {
-            case 0:
+            case 1:
                 if (button2)
                 {
                     current_time->tm_year++;
                 }
                 break;
-            case 1:
+            case 2:
                 if (button2)
                 {
                     current_time->tm_year += 10;
                 }
                 break;
-            case 2:
+            case 3:
                 if (button2)
                 {
                     current_time->tm_year += 100;
                 }
                 break;
-            case 3:
+            case 4:
                 if (button2)
                 {
                     current_time->tm_year += 1000;
@@ -122,25 +130,25 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             current_time->tm_sec = 0;
             switch (pos)
             {
-            case 0:
+            case 1:
                 if (button2)
                 {
                     current_time->tm_mday++;
                 }
                 break;
-            case 1:
+            case 2:
                 if (button2)
                 {
                     current_time->tm_mday += 10;
                 }
                 break;
-            case 2:
+            case 3:
                 if (button2)
                 {
                     current_time->tm_mon++;
                 }
                 break;
-            case 3:
+            case 4:
                 if (button2)
                 {
                     current_time->tm_mon += 10;
@@ -154,25 +162,25 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             current_time->tm_sec = 0;
             switch (pos)
             {
-            case 0:
+            case 1:
                 if (button2)
                 {
                     current_time->tm_min++;
                 }
                 break;
-            case 1:
+            case 2:
                 if (button2)
                 {
                     current_time->tm_min += 10;
                 }
                 break;
-            case 2:
+            case 3:
                 if (button2)
                 {
                     current_time->tm_hour++;
                 }
                 break;
-            case 3:
+            case 4:
                 if (button2)
                 {
                     current_time->tm_hour += 10;

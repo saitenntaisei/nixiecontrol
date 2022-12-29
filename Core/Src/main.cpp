@@ -59,9 +59,6 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
-LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
-LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
 CONTROLLER controller;
 uint8_t cnt = 0;
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -69,19 +66,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin == SW_3_Pin)
   {
     controller.handler(false, false, true);
-    LED_3.toggle();
+    // LED_3.toggle();
     return;
   }
   if (GPIO_Pin == SW_2_Pin)
   {
     controller.handler(false, true, false);
-    LED_2.toggle();
+    // LED_2.toggle();
     return;
   }
   if (GPIO_Pin == SW_1_Pin)
   {
     controller.handler(true, false, false);
-    LED_1.toggle();
+    // LED_1.toggle();
     return;
   }
 }
@@ -134,7 +131,9 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   nixie::TUBES nixie_tubes;
-
+  LED LED_1(LED_1_GPIO_Port, LED_1_Pin);
+  LED LED_2(LED_2_GPIO_Port, LED_2_Pin);
+  LED LED_3(LED_3_GPIO_Port, LED_3_Pin);
   while (1)
   {
     // auto current_time = gmtime(&ltime);

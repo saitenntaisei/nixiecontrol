@@ -12,11 +12,11 @@ private:
 public:
     LED(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin) : GPIOx(GPIOx), GPIO_Pin(GPIO_Pin)
     {
-        off();
+        HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
     };
     ~LED()
     {
-        off();
+        HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
     };
     void toggle();
     void on();
