@@ -31,6 +31,7 @@ void CONTROLLER::disp()
     uint8_t day = current_time->tm_mday;
     uint8_t month = current_time->tm_mon + 1;     // month is 0-indexed so need to add 1
     uint16_t year = current_time->tm_year + 1900; // need to add 1900
+    uint16_t wday = current_time->tm_wday;
     uint16_t blink_pos = 0;
     if (pos != 0)
     {
@@ -48,7 +49,7 @@ void CONTROLLER::disp()
         tubes->disp(hour, minute, blink_pos);
         break;
     case Sec:
-        tubes->disp(minute, sec, blink_pos);
+        tubes->disp(sec, wday, blink_pos);
         break;
     default:
         break;
