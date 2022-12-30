@@ -151,7 +151,6 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             break;
         case Day:
             current_time->tm_sec = 0;
-            current_time->tm_mon++;
             switch (pos)
             {
             case 1:
@@ -163,15 +162,7 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             case 2:
                 if (button2)
                 {
-                    uint8_t num = (current_time->tm_mday / 10) % 10;
-                    current_time->tm_mday -= num * 10;
-                    num++;
-                    if (current_time->tm_mday % 10 > 1)
-                    {
-                        num %= 3;
-                    }
-                    num %= 4;
-                    current_time->tm_mday += num * 10;
+                    current_time->tm_mday += 10;
                 }
                 break;
             case 3:
@@ -183,25 +174,12 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             case 4:
                 if (button2)
                 {
-                    uint8_t num = (current_time->tm_mon / 10) % 10;
-                    current_time->tm_mon -= num * 10;
-                    num++;
-                    if (current_time->tm_mon % 10 > 2)
-                    {
-                        num %= 1;
-                    }
-                    if (current_time->tm_mon % 10 == 0)
-                    {
-                        num = 1;
-                    }
-                    num %= 2;
-                    current_time->tm_mon += num * 10;
+                    current_time->tm_mon += 10;
                 }
                 break;
             default:
                 break;
             }
-            current_time->tm_mon--;
             break;
         case Hour:
             current_time->tm_sec = 0;
@@ -216,11 +194,7 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             case 2:
                 if (button2)
                 {
-                    uint8_t num = (current_time->tm_min / 10) % 10;
-                    current_time->tm_min -= num * 10;
-                    num++;
-                    num %= 6;
-                    current_time->tm_min += num * 10;
+                    current_time->tm_min += 10;
                 }
                 break;
             case 3:
@@ -232,13 +206,7 @@ void CONTROLLER::handler(bool button1, bool button2, bool button3)
             case 4:
                 if (button2)
                 {
-                    uint8_t num = (current_time->tm_hour / 10) % 10;
-                    current_time->tm_hour -= num * 10;
-                    num++;
-                    if (current_time->tm_hour % 10 > 4)
-                        num %= 2;
-                    num %= 3;
-                    current_time->tm_hour += num * 10;
+                    current_time->tm_hour += 10;
                 }
                 break;
             default:
